@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import Topbar from "../components/Topbar.astro";
 const BASE = import.meta.env.BASE_URL;
+import StatusBox from '../components/StatusBox.astro';
 
 ---
 
@@ -14,74 +15,6 @@ const BASE = import.meta.env.BASE_URL;
     <title>alive</title>
   </head>
   <body>
-	<script is:inline>
-	(function(){
-		var boot   = document.getElementById('boot');
-		var out    = document.getElementById('boot-lines');
-		var flash  = document.getElementById('flash');
-		var reveal = document.getElementById('reveal');
-		if (!boot || !out || !flash || !reveal) return;
-
-		var lines = [
-			"> booting aliveOS...",
-			"> loading thoughts...",
-			"> ready."
-		];
-
-		var charDelay = 35, linePause = 350, reduce = false;
-		try { reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch(e){}
-		if (reduce){ charDelay = 0; linePause = 120; }
-
-		var li=0, ci=0;
-
-		function typeChar(){
-			if (li >= lines.length){
-
-			boot.classList.add("boot--hide");
-
-			if (!reduce){
-				flash.classList.add("flash--go");
-				setTimeout(function(){ reveal.classList.add("reveal--go"); }, 110);
-				setTimeout(finishBoot, 600);
-			} else {
-				finishBoot();
-			}
-			return;
-			}
-			var text = lines[li];
-			if (ci === 0 && li > 0) out.appendChild(document.createTextNode("\n"));
-			out.appendChild(document.createTextNode(text.charAt(ci++)));
-			if (ci < text.length) setTimeout(typeChar, charDelay);
-			else { ci = 0; li++; setTimeout(typeChar, linePause); }
-		}
-
-		function finishBoot(){
-			try { flash.remove(); reveal.remove(); } catch(e){}
-			document.dispatchEvent(new CustomEvent("boot:done"));
-		}
-
-		typeChar();
-		})();
-		</script>
-
-		<script is:inline>
-		(function(){
-		document.addEventListener("boot:done", function(){
-			var el = document.getElementById("hello");
-			if (!el) return;
-			var text = "Hi, I'm Alive";
-			var i = 0, delay = 45;
-			try {
-			if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) delay = 0;
-				} catch(e){}
-				(function next(){
-				if (i < text.length){ el.textContent += text.charAt(i++); setTimeout(next, delay); }
-				else { el.classList.remove("type-caret"); } 
-				})();
-			});
-		})();
-	</script>
-  
 	<div id="boot" class="boot">
 		<pre id="boot-lines" class="boot-lines"></pre>
 	</div>
@@ -131,56 +64,74 @@ const BASE = import.meta.env.BASE_URL;
 		</div>
       </section>
     </main>
-  	<footer class="site-footer">made with astro + Need coffee</footer>
+
 	<script is:inline>
-	(function(){
-		var boot = document.getElementById('boot');
-		var out  = document.getElementById('boot-lines');
-		if (!boot || !out) return;
+		(function(){
+		var boot   = document.getElementById('boot');
+		var out    = document.getElementById('boot-lines');
+		var flash  = document.getElementById('flash');
+		var reveal = document.getElementById('reveal');
+		if (!boot || !out || !flash || !reveal) return;
 
-		var lines = [
-		"> booting aliveOS...",
-		"> loading thoughts...",
-		"> ready."
-		];
+		var lines = ["> booting aliveOS...","> loading thoughts...","> ready."];
 
-		var charDelay = 35; 
-		var linePause = 350; 
+		var charDelay = 35, linePause = 350, reduce = false;
+		try { reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch(e){}
+		if (reduce){ charDelay = 0; linePause = 120; }
 
-		try {
-		if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-			charDelay = 0;
-			linePause = 120;
-		}
-		} catch(e){}
-
-		var li = 0;  
-		var ci = 0;   
+		var li=0, ci=0;
 
 		function typeChar(){
-		if (li >= lines.length) {
-			setTimeout(function(){ boot.classList.add("boot--hide"); }, 200);
+			if (li >= lines.length){
+			boot.classList.add("boot--hide");
+
+			if (!reduce){
+				flash.classList.add("flash--go");
+				setTimeout(function(){ reveal.classList.add("reveal--go"); }, 110);
+				setTimeout(finishBoot, 600);
+			} else {
+				finishBoot();
+			}
 			return;
+			}
+			var text = lines[li];
+			if (ci === 0 && li > 0) out.appendChild(document.createTextNode("\n"));
+			out.appendChild(document.createTextNode(text.charAt(ci++)));
+			if (ci < text.length) setTimeout(typeChar, charDelay);
+			else { ci = 0; li++; setTimeout(typeChar, linePause); }
 		}
-		var text = lines[li];
 
-		if (ci === 0) {
-			if (li > 0) out.appendChild(document.createTextNode("\n"));
+		function finishBoot(){
+			try { flash.remove(); reveal.remove(); } catch(e){}
+			document.dispatchEvent(new CustomEvent("boot:done"));
 		}
 
-		out.appendChild(document.createTextNode(text.charAt(ci)));
-		ci++;
-
-		if (ci < text.length) {
-			setTimeout(typeChar, charDelay);
-		} else {
-			ci = 0;
-			li++;
-			setTimeout(typeChar, linePause);
-		}
-		}
 		typeChar();
-	})();
+		})();
 	</script>
+
+	<script is:inline>
+		(function(){
+		document.addEventListener("boot:done", function(){
+			var el = document.getElementById("hello");
+			if (!el) return;
+			var text = "Hi, I'm Alive";
+			var i = 0, delay = 45;
+			try { if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) delay = 0; } catch(e){}
+			(function next(){ if (i < text.length){ el.textContent += text.charAt(i++); setTimeout(next, delay); } else { el.classList.remove("type-caret"); } })();
+		});
+		})();
+	</script>
+	
+	<section style="margin-block-end: clamp(3rem, 8vh, 10rem);"></section>
+
+	<StatusBox
+	label="Now Playing"
+	value="lo-fi study loop"
+	mode="docked"
+	storageKey="statusbox-now"
+	/>
+
+	<footer class="site-footer">made with astro + Need coffee</footer>
   </body>
 </html>
