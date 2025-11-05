@@ -1,0 +1,16 @@
+make a site with astro
+
+find cool ui animations
+color schemes?
+idk
+
+YEAHHHHHHHHHHHHHH IT FINALLY WORKS LETS GO
+
+okay now the remaining todo stuff:
+    add more ui elements
+        react
+        tailwind
+        or smth else 
+    anime js site finally USE IT 
+    probably gonna be way too complicated but whatever
+    just gotta get it to work no matter what...

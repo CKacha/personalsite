@@ -2,85 +2,185 @@
 import "../styles/global.css";
 import Topbar from "../components/Topbar.astro";
 const BASE = import.meta.env.BASE_URL;
+
 ---
 
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="dark" data-base={BASE}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href={`${BASE}favicon.svg`} />
-    <link rel="shortcut icon" type="image/svg+xml" href={`${BASE}favicon.svg`} />
+    <link rel="icon" type="image/svg+xml" href={BASE + 'favicon.svg'} />
+    <link rel="shortcut icon" type="image/svg+xml" href={BASE + 'favicon.svg'} />
     <title>alive</title>
   </head>
   <body>
-    <header class="topbar">
-      <div class="site-title">alive</div>
-      <button id="toggleTheme" class="invert-btn" aria-pressed="false" aria-label="Invert site">
-        invert
-      </button>
-    </header>
+	<script is:inline>
+	(function(){
+		var boot   = document.getElementById('boot');
+		var out    = document.getElementById('boot-lines');
+		var flash  = document.getElementById('flash');
+		var reveal = document.getElementById('reveal');
+		if (!boot || !out || !flash || !reveal) return;
+
+		var lines = [
+			"> booting aliveOS...",
+			"> loading thoughts...",
+			"> ready."
+		];
+
+		var charDelay = 35, linePause = 350, reduce = false;
+		try { reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch(e){}
+		if (reduce){ charDelay = 0; linePause = 120; }
+
+		var li=0, ci=0;
+
+		function typeChar(){
+			if (li >= lines.length){
+
+			boot.classList.add("boot--hide");
+
+			if (!reduce){
+				flash.classList.add("flash--go");
+				setTimeout(function(){ reveal.classList.add("reveal--go"); }, 110);
+				setTimeout(finishBoot, 600);
+			} else {
+				finishBoot();
+			}
+			return;
+			}
+			var text = lines[li];
+			if (ci === 0 && li > 0) out.appendChild(document.createTextNode("\n"));
+			out.appendChild(document.createTextNode(text.charAt(ci++)));
+			if (ci < text.length) setTimeout(typeChar, charDelay);
+			else { ci = 0; li++; setTimeout(typeChar, linePause); }
+		}
+
+		function finishBoot(){
+			try { flash.remove(); reveal.remove(); } catch(e){}
+			document.dispatchEvent(new CustomEvent("boot:done"));
+		}
+
+		typeChar();
+		})();
+		</script>
+
+		<script is:inline>
+		(function(){
+		document.addEventListener("boot:done", function(){
+			var el = document.getElementById("hello");
+			if (!el) return;
+			var text = "Hi, I'm Alive";
+			var i = 0, delay = 45;
+			try {
+			if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) delay = 0;
+				} catch(e){}
+				(function next(){
+				if (i < text.length){ el.textContent += text.charAt(i++); setTimeout(next, delay); }
+				else { el.classList.remove("type-caret"); } 
+				})();
+			});
+		})();
+	</script>
+  
+	<div id="boot" class="boot">
+		<pre id="boot-lines" class="boot-lines"></pre>
+	</div>
+	<div id="flash" class="flash" aria-hidden="true"></div>
+	<div id="reveal" class="reveal" aria-hidden="true">
+		<div class="bar bar-left"></div>
+		<div class="bar bar-right"></div>
+	</div>
+
+    <Topbar />
 
     <main class="wrap">
-      <h1>Hi, I'm Alive</h1>
+      <h1 id="hello" class="type-caret"></h1>
       <p>I'm a Junior in high school, and I create stuff</p>
 
-      <section>
-        <h2>my socials</h2>
+      <section aria-label="my socials" class="ticker b-solid">
+		<div class="ticker-head">my socials</div>
 
-        <div class="row">
-          <div class="label">github</div>
-          <div class="value">
-            <div class="repeat-line">
-              {Array.from({ length: 24 }).map((_, i) => (
-                <span class="repeat-item" key={i}>
-                  https://github.com/ChanminK{ i < 23 ? "  •  " : "" }
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
+		<div class="ticker-viewport">
+			<div class="ticker-track">
+			<span class="item"><a href="https://github.com/ChanminK" target="_blank" rel="noreferrer">github.com/ChanminK</a></span>
+			<span class="sep">•</span>
+			<span class="item">@Iamalive (slack)</span>
+			<span class="sep">•</span>
+			<span class="item">thisischanmin@gmail.com</span>
+			<span class="sep">•</span>
+			<span class="item"><a href="https://github.com/ChanminK" target="_blank" rel="noreferrer">github.com/ChanminK</a></span>
+			<span class="sep">•</span>
+			<span class="item">@Iamalive (slack)</span>
+			<span class="sep">•</span>
+			<span class="item">thisischanmin@gmail.com</span>
+			</div>
 
-        <div class="row">
-          <div class="label">slack</div>
-          <div class="value">@Iamalive</div>
-        </div>
-
-        <div class="row">
-          <div class="label">email</div>
-          <div class="value">thisischanmin.gmail.com</div>
-        </div>
+			<div class="ticker-track" aria-hidden="true">
+			<span class="item"><a href="https://github.com/ChanminK" target="_blank" rel="noreferrer">github.com/ChanminK</a></span>
+			<span class="sep">•</span>
+			<span class="item">@Iamalive (slack)</span>
+			<span class="sep">•</span>
+			<span class="item">thisischanmin@gmail.com</span>
+			<span class="sep">•</span>
+			<span class="item"><a href="https://github.com/ChanminK" target="_blank" rel="noreferrer">github.com/ChanminK</a></span>
+			<span class="sep">•</span>
+			<span class="item">@Iamalive (slack)</span>
+			<span class="sep">•</span>
+			<span class="item">thisischanmin@gmail.com</span>
+			</div>
+		</div>
       </section>
     </main>
+  	<footer class="site-footer">made with astro + Need coffee</footer>
+	<script is:inline>
+	(function(){
+		var boot = document.getElementById('boot');
+		var out  = document.getElementById('boot-lines');
+		if (!boot || !out) return;
 
-    <script is:inline>
-      const root = document.documentElement;
-      const key = 'theme';
-	  const BASE = `${BASE}`;
+		var lines = [
+		"> booting aliveOS...",
+		"> loading thoughts...",
+		"> ready."
+		];
 
-      const saved = localStorage.getItem(key);
-      if (saved === 'light' || saved === 'dark') root.dataset.theme = saved;
+		var charDelay = 35; 
+		var linePause = 350; 
 
-      function setIcon() {
-        const isLight = root.dataset.theme === 'light';
-        const file = isLight ? 'faviconinvert.svg' : 'favicon.svg';
-        const href = BASE + file + '?v=' + (isLight ? '1' : '0'); // cache-bust
+		try {
+		if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+			charDelay = 0;
+			linePause = 120;
+		}
+		} catch(e){}
 
-        document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"]').forEach(link => {
-          link.setAttribute('type', 'image/svg+xml');
-          link.setAttribute('href', href);
-        });
-      }
-      setIcon();
+		var li = 0;  
+		var ci = 0;   
 
-      const btn = document.getElementById('toggleTheme');
-      btn?.addEventListener('click', () => {
-        const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
-        root.dataset.theme = next;
-        localStorage.setItem(key, next);
-        btn.setAttribute('aria-pressed', String(next === 'light'));
-        setIcon();
-      });
-    </script>
+		function typeChar(){
+		if (li >= lines.length) {
+			setTimeout(function(){ boot.classList.add("boot--hide"); }, 200);
+			return;
+		}
+		var text = lines[li];
+
+		if (ci === 0) {
+			if (li > 0) out.appendChild(document.createTextNode("\n"));
+		}
+
+		out.appendChild(document.createTextNode(text.charAt(ci)));
+		ci++;
+
+		if (ci < text.length) {
+			setTimeout(typeChar, charDelay);
+		} else {
+			ci = 0;
+			li++;
+			setTimeout(typeChar, linePause);
+		}
+		}
+		typeChar();
+	})();
+	</script>
   </body>
 </html>
-
