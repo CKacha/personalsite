@@ -3,6 +3,7 @@ import "../styles/global.css";
 import Topbar from "../components/Topbar.astro";
 
 const BASE = import.meta.env.BASE_URL;
+const USER = "ChanminK";
 
 const ART: string[] = [
   "orpheous.png",
@@ -11,7 +12,7 @@ const ART: string[] = [
 ];
 ---
 
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="dark" data-base={BASE}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
@@ -32,9 +33,7 @@ const ART: string[] = [
       <section>
         <h2>art</h2>
         {ART.length === 0 ? (
-          <p class="muted">
-            Drop images into <code>public/art/</code> and list them in <code>ART</code> above.
-          </p>
+          <p class="muted">Drop images into <code>public/art/</code> and list them above.</p>
         ) : (
           <div class="art-grid">
             {ART.map((f: string) => (

@@ -1,11 +1,10 @@
 ---
 const BASE = import.meta.env.BASE_URL;
-
 const links: { href: string; label: string }[] = [
-  { href: `${BASE}`,           label: "home" },
-  { href: `${BASE}projects`,   label: "my projects" },
-  { href: `${BASE}logbook`,    label: "logbook" },
-  { href: `${BASE}blog`,       label: "blog" },
+  { href: `${BASE}`,         label: "home" },
+  { href: `${BASE}projects`, label: "my projects" },
+  { href: `${BASE}logbook`,  label: "logbook" },
+  { href: `${BASE}blog`,     label: "blog" },
 ];
 ---
 
@@ -27,10 +26,16 @@ const links: { href: string; label: string }[] = [
     var saved = localStorage.getItem(KEY);
     if (saved === 'light' || saved === 'dark') root.dataset.theme = saved;
 
+    function joinBase(b, path) {
+      if (!b.endsWith('/')) b += '/';
+      path = String(path).replace(/^\/+/, '');
+      return b + path;
+    }
+
     function setIcon() {
       var isLight = root.dataset.theme === 'light';
       var file = isLight ? 'faviconinvert.svg' : 'favicon.svg';
-      var href = base + file + '?v=' + (isLight ? '1' : '0');
+      var href = joinBase(base, file) + '?v=' + (isLight ? '1' : '0');
       document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"]').forEach(function(link){
         link.setAttribute('type', 'image/svg+xml');
         link.setAttribute('href', href);
