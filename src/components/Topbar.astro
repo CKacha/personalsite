@@ -1,17 +1,17 @@
 ---
 const BASE = import.meta.env.BASE_URL;
-const links = [
-  { href: "/", label: "home" },
-  { href: "/projects", label: "my projects" },
-  { href: "/logbook", label: "logbook" },
-  { href: BASE + "blog",     label: "blog" },
-];
 
+const links: { href: string; label: string }[] = [
+  { href: `${BASE}`,           label: "home" },
+  { href: `${BASE}projects`,   label: "my projects" },
+  { href: `${BASE}logbook`,    label: "logbook" },
+  { href: `${BASE}blog`,       label: "blog" },
+];
 ---
 
 <header class="topbar">
   <nav class="tabs">
-    {links.map(l => (
+    {links.map((l) => (
       <a href={l.href} class="tab">{l.label}</a>
     ))}
   </nav>
@@ -21,7 +21,7 @@ const links = [
 <script is:inline>
   (function(){
     var root = document.documentElement;
-    var base = root.getAttribute('data-base') || '/'; // read from <html data-base>
+    var base = root.getAttribute('data-base') || '/';
     var KEY = 'theme';
 
     var saved = localStorage.getItem(KEY);
