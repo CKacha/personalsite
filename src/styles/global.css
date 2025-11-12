@@ -2,12 +2,20 @@
   --bg:#000;
   --ink:#fff;
   --line:#000;
+  
+  --link:#7fc7ff;       
+  --link-hover:#a8d6ff;  
+  --link-active:#d7ecff; 
 }
 
 :root[data-theme="light"]{
   --bg:#fff;
   --ink:#000;
   --line:#000;
+
+  --link:#0b6bff;
+  --link-hover:#2f85ff;
+  --link-active:#5aa2ff;
 }
 
 *{box-sizing:border-box}
@@ -245,4 +253,29 @@ h2{margin:24px 0 8px 0; font-size:18px; text-transform:lowercase; border-bottom:
   width: 22px; height: 22px; line-height: 20px; text-align: center;
   border: 2px solid var(--ink); background: var(--bg); color: var(--ink);
   font: inherit; cursor: pointer;
+}
+
+a,
+a:visited {
+  color: var(--link);
+  text-decoration: none; 
+}
+a:hover {
+  color: var(--link-hover);
+  text-decoration: underline; 
+}
+a:active,
+a:focus-visible {
+  color: var(--link-active);
+  outline: 2px solid var(--link-active);
+  outline-offset: 2px;
+}
+
+.repo-title a,
+.card a {
+  color: var(--link);
+}
+.repo-title a:hover,
+.card a:hover {
+  color: var(--link-hover);
 }

@@ -3,13 +3,16 @@ import "../styles/global.css";
 import Topbar from "../components/Topbar.astro";
 
 const BASE = import.meta.env.BASE_URL;
-const USER = "ChanminK";
 
-const ART: string[] = [
-  "orpheous.png",
-  "background.jpg",
-  "orhpeousdrawing.png",
-];
+function joinBase(b: string, path: string) {
+  if (!b.endsWith("/")) b += "/";
+  path = path.replace(/^\/+/, "");
+  return b + path;
+}
+
+const IMG1 = joinBase(BASE, "art/orpheous.png");
+const IMG2 = joinBase(BASE, "art/background.jpg");
+const IMG3 = joinBase(BASE, "art/orhpeousdrawing.png");
 ---
 
 <html lang="en" data-theme="dark" data-base={BASE}>
@@ -32,18 +35,22 @@ const ART: string[] = [
 
       <section>
         <h2>art</h2>
-        {ART.length === 0 ? (
-          <p class="muted">Drop images into <code>public/art/</code> and list them above.</p>
-        ) : (
-          <div class="art-grid">
-            {ART.map((f: string) => (
-              <figure class="art-card">
-                <img src={`${BASE}art/${f}`} alt={f} loading="lazy" />
-                <figcaption>{f}</figcaption>
-              </figure>
-            ))}
-          </div>
-        )}
+        <div class="art-grid">
+          <figure class="art-card">
+            <img src={IMG1} alt="orpheous.png" loading="lazy" />
+            <figcaption>orpheous.png</figcaption>
+          </figure>
+
+          <figure class="art-card">
+            <img src={IMG2} alt="background.jpg" loading="lazy" />
+            <figcaption>background.jpg</figcaption>
+          </figure>
+
+          <figure class="art-card">
+            <img src={IMG3} alt="orhpeousdrawing.png" loading="lazy" />
+            <figcaption>orhpeousdrawing.png</figcaption>
+          </figure>
+        </div>
       </section>
     </main>
 
