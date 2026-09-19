@@ -6,4 +6,4 @@ Made with astro for the first time!!!
 
 ____
 
-### This is my old site, and will be made private within a month - my new personal site is currently a wip!
+### V1 Site, finy my new V2 [here](https://ckacha.dev/)
